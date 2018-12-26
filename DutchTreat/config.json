@@ -1,0 +1,14 @@
+{
+  "Colors": {
+    "Favortie": "blue"
+  },
+  "ConnectionStrings": {
+    "DutchConnectionString": "server=Admin-PC\\SqlEnterprise;Database=DutchTreatUpdDb;Integrated Security=true;MultipleActiveResultSets=true;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning"
+    }
+  }
+}
