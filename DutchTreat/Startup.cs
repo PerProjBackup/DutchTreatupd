@@ -13,6 +13,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace DutchTreat
 {
@@ -29,10 +32,22 @@ namespace DutchTreat
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddDbContext<DutchContext>(cfg =>
-      {
-        cfg.UseSqlServer(_config.GetConnectionString("DutchConnectionString"));
-      });
+      services.AddIdentity<StoreUser, IdentityRole>(cfg => {
+        cfg.User.RequireUniqueEmail = true; })
+        .AddEntityFrameworkStores<DutchContext>();
+
+      services.AddAuthentication().AddCookie()
+        .AddJwtBearer(cfg =>
+        {
+          cfg.TokenValidationParameters = new TokenValidationParameters()
+          {
+            ValidIssuer = _config["Tokens:Issuer"],
+            ValidAudience = _config["Tokens:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]))
+          }; } );
+
+      services.AddDbContext<DutchContext>(cfg => {
+        cfg.UseSqlServer(_config.GetConnectionString("DutchConnectionString")); });
 
       services.AddAutoMapper();
       
@@ -66,6 +81,9 @@ namespace DutchTreat
       //});
       //app.UseDefaultFiles();
       app.UseStaticFiles();
+
+      app.UseAuthentication();
+
       app.UseNodeModules(env);
       app.UseMvc(cfg =>
       {
