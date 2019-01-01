@@ -1,9 +1,10 @@
 ﻿import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Product } from './product';
 import { Order, OrderItem } from './order';
+import { transformAll } from '@angular/compiler/src/render3/r3_ast';
 //import * as OrderNS from './order';
 
 @Injectable()
@@ -11,19 +12,53 @@ export class DataService {
 
   constructor(private http: HttpClient) { }
 
+  private token: string = "";
+  private tokenExpiration: Date;
+  
   public order: Order = new Order();
 
   public products: Product[] = [];
-    //{ title: "First Product", price: 19.99 },
-    //{ title: "Second Product", price: 9.99 },
-    //{ title: "Third Product", price: 14.99 }
 
   loadProducts(): Observable<boolean> {
     return this.http.get("/api/products")
       .pipe(map((data: any[]) => {
         this.products = data;
         return true;
-      }));
+      }));    }
+
+  public get loginRequired(): boolean {
+    return this.token.length == 0 || this.tokenExpiration > new Date();
+  }
+
+  login(creds): Observable<boolean> {
+    return this.http
+      .post("/account/createtoken", creds)
+      .pipe(map((data: any) => {
+        this.token = data.token;
+        this.tokenExpiration = data.expiration;
+        return true;
+      }));  }
+
+  //public login(creds) {
+  //  return this.http.post("/account/createtoken", creds)
+  //    .pipe(
+  //      map((response: any) => {
+  //        let tokenInfo = response;
+  //        this.token = tokenInfo.token;
+  //        this.tokenExpiration = tokenInfo.expiration;
+  //        return true;
+  //      }));    }
+
+  public checkout() {
+    if (!this.order.orderNumber) {
+      this.order.orderNumber = this.order.orderDate.getFullYear().toString() +
+        this.order.orderDate.getTime().toString();    }
+    return this.http.post("/api/orders", this.order, {
+      headers: new HttpHeaders().set("Authorization", "Bearer " + this.token)
+    })
+      .pipe(map(response => {
+        this.order = new Order();
+        return true; }));
   }
 
   public addToOrder(product: Product) {
