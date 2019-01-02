@@ -1,3 +1,7 @@
-﻿.checkout-thumb {
+﻿#errMsg {
+  width: 200px;
+}
+
+.checkout-thumb {
   max-width: 100px;
 }

@@ -1,28 +1,31 @@
-<h3>Shopping Cart</h3>
-<div>#/Items: {{ data.order.items.length }}</div>
-<div>SubTotal: {{ data.order.subtotal | currency }}</div>
-<table class="table table-condensed table-hover">
-  <thead>
-    <tr>
-      <td>Product</td>
-      <td>#</td>
-      <td>$</td>
-      <td>Total</td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let o of data.order.items" >
-      <td>{{ o.productCategory }} - {{ o.productTitle }}</td>
-      <td>{{ o.quantity }}</td>
-      <td>{{ o.unitPrice | currency }}</td>
-      <td>{{ (o.unitPrice * o.quantity) | currency }}</td>
-    </tr>
-  </tbody>
+<div class="card bg-light">
+  <div class="card-body p-2">
+    <div><strong>#/Items:</strong> {{ data.order.items.length }}</div>
+    <div><strong>SubTotal:</strong> {{ data.order.subtotal | currency }}</div>
+    <table class="table table-sm table-hover">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>#</th>
+          <th>$</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let o of data.order.items">
+          <td>{{ o.productCategory }} - {{ o.productTitle }}</td>
+          <td>{{ o.quantity }}</td>
+          <td>{{ o.unitPrice | currency }}</td>
+          <td>{{ (o.unitPrice * o.quantity) | currency }}</td>
+        </tr>
+      </tbody>
 
-</table>
-<!--<a routerLink="checkout" class="btn btn-success" *ngIf="data.order.items.length > 0">
-  Checkout
-</a>-->
-<button class="btn btn-success" *ngIf="data.order.items.length > 0" (click)="onCheckout()">
-  Checkout
-</button>
+    </table>
+    <!--<a routerLink="checkout" class="btn btn-success" *ngIf="data.order.items.length > 0">
+      Checkout
+    </a>-->
+    <button class="btn btn-success" *ngIf="data.order.items.length > 0" (click)="onCheckout()">
+      Checkout
+    </button>
+  </div>
+</div>

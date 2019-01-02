@@ -67,11 +67,8 @@ export class DataService {
 
     let item: OrderItem = this.order.items.find(i => i.productId == product.id);
 
-    if (item) {
-    item.quantity++
-
+    if (item) { item.quantity++
     } else {
-
       item = new OrderItem();
       item.productId = product.id;
       item.productArtist = product.artist;

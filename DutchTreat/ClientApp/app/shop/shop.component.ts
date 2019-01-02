@@ -5,4 +5,8 @@
   templateUrl: "shop.component.html"
 })
 
-export class Shop {}
+export class Shop {
+  prodListTitle = "Product List";
+  shpCartTitle = "Shopping Cart";
+
+}

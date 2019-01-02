@@ -2,6 +2,8 @@ import * as tslib_1 from "tslib";
 import { Component } from '@angular/core';
 var Shop = /** @class */ (function () {
     function Shop() {
+        this.prodListTitle = "Product List";
+        this.shpCartTitle = "Shopping Cart";
     }
     Shop = tslib_1.__decorate([
         Component({
